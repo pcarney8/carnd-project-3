@@ -25,14 +25,13 @@ x_train = list()
 for img in X_train:
 	read_image = cv2.imread(img)
 	resized_image = cv2.resize(read_image, (32, 16))
-	x_train.append(np.array(resized_image.reshape( (1,) + resized_image.shape )))
-#	x_train.append(resized_image)
+#	x_train.append(np.array(resized_image.reshape( (None,) + resized_image.shape )))
+	x_train.append(resized_image[None,:])
+
 y_train = list()
 
 for y in Y_train:
-	print(y)
 	new_y = float(y)
-	print(new_y)
 	y_train.append(np.array(new_y))
 
 print(x_train[0].shape)
@@ -55,8 +54,8 @@ ch, row, col = 3, 16, 32  # camera format
 
 model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1.,
-		input_shape=(ch, row, col),
-		output_shape=(ch, row, col)))
+		input_shape=(row, col, ch),
+		output_shape=(row, col, ch)))
 model.add(Convolution2D(16, 8, 8, subsample=(4, 4), border_mode="same"))
 model.add(ELU())
 model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
