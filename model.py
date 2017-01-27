@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Activation, Flatten, Convolution2D, MaxPooling2D, Dropout
+from keras.layers import Dense, Activation, Flatten, Convolution2D, MaxPooling2D, Dropout, Lambda, ELU
 import csv
 import numpy as np
 from scipy import ndimage
@@ -51,19 +51,26 @@ x_train, y_train = shuffle(x_train, y_train)
 model = Sequential()
 
 # Model needs to output a single value, not a softmax either
-model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(16, 32, 3)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
-model.add(Activation('relu'))
-model.add(Convolution2D(14, 3, 3, border_mode='valid', input_shape=(14, 14, 6)))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Dropout(0.5))
-model.add(Activation('relu'))
-model.add(Flatten(input_shape=(14, 14, 6)))
-model.add(Dense(128))
+ch, row, col = 3, 16, 32  # camera format
+
+model = Sequential()
+model.add(Lambda(lambda x: x/127.5 - 1.,
+		input_shape=(ch, row, col),
+		output_shape=(ch, row, col)))
+model.add(Convolution2D(16, 8, 8, subsample=(4, 4), border_mode="same"))
+model.add(ELU())
+model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
+model.add(ELU())
+model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode="same"))
 model.add(Flatten())
-model.add(Activation('relu'))
-model.add(Dense(43))
+model.add(Dropout(.2))
+model.add(ELU())
+model.add(Dense(512))
+model.add(Dropout(.5))
+model.add(ELU())
+model.add(Dense(1))
+
+#model.compile(optimizer="adam", loss="mse")
 
 # Compile and train the model
 model.compile('adam', 'categorical_crossentropy', ['accuracy'])
