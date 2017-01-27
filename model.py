@@ -53,7 +53,6 @@ model = Sequential()
 # Model needs to output a single value, not a softmax either
 ch, row, col = 3, 16, 32  # camera format
 
-model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1.,
 		input_shape=(row, col, ch),
 		output_shape=(row, col, ch)))
