@@ -5,12 +5,13 @@ import numpy as np
 from scipy import ndimage
 import cv2
 from sklearn.utils import shuffle
+from sklearn.model_selection import train_test_split
 
 # Load in the center camera data and steering angle
 X_train = list()
 Y_train = list()
 
-with open('test.csv', 'rt') as csvfile:
+with open('driving_log.csv', 'rt') as csvfile:
 	csvreader = csv.reader(csvfile)
 	for row in csvreader:
 		X_train.append(row[0])
@@ -34,11 +35,10 @@ for y in Y_train:
 	new_y = float(y)
 	y_train.append(new_y)
 
-print(x_train[0].shape)
-print(x_train)
-print(y_train)
 # shuffle the data
 x_train, y_train = shuffle(x_train, y_train)
+
+x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size = 0.15, random_state = 0)
 
 # normalize the features ? do i need to do this?
 
@@ -92,6 +92,10 @@ model.add(Dense(1))
 model.compile('adam', 'sparse_categorical_crossentropy', ['accuracy'])
 #history = model.fit(X_normalized, y_one_hot, batch_size=128, nb_epoch=10, validation_split=0.2)
 history = model.fit(np.array(x_train), np.array(y_train), batch_size=128, nb_epoch=1, validation_split=0.15)
+
+test_score = model.evaluate(x_test, y_test)
+print(test_score)
+print(model.metrics_names)
 
 # Save model
 with open("model.json", "w") as model_file:
