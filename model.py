@@ -48,27 +48,44 @@ x_train, y_train = shuffle(x_train, y_train)
 # Split into training and validation data sets, model.fit can do this for me
 
 # Define the Model
+# my model
 model = Sequential()
+
+model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(32, 32, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.5))
+model.add(Activation('relu'))
+model.add(Convolution2D(14, 3, 3, border_mode='valid', input_shape=(14, 14, 6)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.5))
+model.add(Activation('relu'))
+model.add(Flatten(input_shape=(14, 14, 6)))
+model.add(Dense(128))
+model.add(Activation('relu'))
+model.add(Dense(43))
+model.add(Activation('softmax'))
+
+# TODO: Compile and train the model
 
 # Model needs to output a single value, not a softmax either
-ch, row, col = 3, 16, 32  # camera format
-
-model = Sequential()
-model.add(Lambda(lambda x: x/127.5 - 1.,
-		input_shape=(ch, row, col),
-		output_shape=(ch, row, col)))
-model.add(Convolution2D(16, 8, 8, subsample=(4, 4), border_mode="same"))
-model.add(ELU())
-model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(ELU())
-model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(Flatten())
-model.add(Dropout(.2))
-model.add(ELU())
-model.add(Dense(512))
-model.add(Dropout(.5))
-model.add(ELU())
-model.add(Dense(1))
+# commonai model
+# ch, row, col = 3, 16, 32  # camera format
+# model = Sequential()
+# model.add(Lambda(lambda x: x/127.5 - 1.,
+		# input_shape=(ch, row, col),
+		# output_shape=(ch, row, col)))
+# model.add(Convolution2D(16, 8, 8, subsample=(4, 4), border_mode="same"))
+# model.add(ELU())
+# model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
+# model.add(ELU())
+# model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode="same"))
+# model.add(Flatten())
+# model.add(Dropout(.2))
+# model.add(ELU())
+# model.add(Dense(512))
+# model.add(Dropout(.5))
+# model.add(ELU())
+# model.add(Dense(1))
 
 #model.compile(optimizer="adam", loss="mse")
 
