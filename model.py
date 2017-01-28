@@ -26,14 +26,13 @@ for img in X_train:
 	read_image = cv2.imread(img)
 	resized_image = cv2.resize(read_image, (32, 16))
 #	x_train.append(np.array(resized_image.reshape( (None,) + resized_image.shape )))
-	new_image = resized_image[None, :, :, :]
-	x_train.append(new_image)
+	x_train.append(resized_image)
 
 y_train = list()
 
 for y in Y_train:
 	new_y = float(y)
-	y_train.append(np.array(new_y))
+	y_train.append(new_y)
 
 print(x_train[0].shape)
 print(x_train)
@@ -51,7 +50,7 @@ x_train, y_train = shuffle(x_train, y_train)
 # my model
 model = Sequential()
 
-model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(32, 32, 3)))
+model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(16, 32, 3)))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 model.add(Dropout(0.5))
 model.add(Activation('relu'))
@@ -63,7 +62,7 @@ model.add(Flatten(input_shape=(14, 14, 6)))
 model.add(Dense(128))
 model.add(Activation('relu'))
 model.add(Dense(43))
-model.add(Activation('softmax'))
+model.add(Dense(1))
 
 # TODO: Compile and train the model
 
@@ -90,9 +89,9 @@ model.add(Activation('softmax'))
 #model.compile(optimizer="adam", loss="mse")
 
 # Compile and train the model
-model.compile('adam', 'categorical_crossentropy', ['accuracy'])
+model.compile('adam', 'sparse_categorical_crossentropy', ['accuracy'])
 #history = model.fit(X_normalized, y_one_hot, batch_size=128, nb_epoch=10, validation_split=0.2)
-history = model.fit(x_train, y_train, batch_size=128, nb_epoch=1, validation_split=0.15)
+history = model.fit(np.array(x_train), np.array(y_train), batch_size=128, nb_epoch=1, validation_split=0.15)
 
 # Save model
 with open("model.json", "w") as model_file:
