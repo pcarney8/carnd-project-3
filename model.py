@@ -6,6 +6,7 @@ from scipy import ndimage
 import cv2
 from sklearn.utils import shuffle
 from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
 
 # Load in the center camera data and steering angle
 X_train = list()
@@ -16,9 +17,6 @@ with open('driving_log.csv', 'rt') as csvfile:
 	for row in csvreader:
 		X_train.append(row[0])
 		Y_train.append(row[3].strip())
-
-print(Y_train)
-print(X_train)
 
 # resize images, currently 320x160
 x_train = list()
@@ -43,6 +41,8 @@ x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size 
 # normalize the features ? do i need to do this?
 
 # one hot pretty sure i don't need one hot because i only have one value
+lb = preprocessing.LabelBinarizer()
+y_one_hot = lb.fit_transform(np.array(y_train))
 
 # Split into training and validation data sets, model.fit can do this for me
 
@@ -91,7 +91,7 @@ model.add(Dense(1))
 # Compile and train the model
 model.compile('adam', 'sparse_categorical_crossentropy', ['accuracy'])
 #history = model.fit(X_normalized, y_one_hot, batch_size=128, nb_epoch=10, validation_split=0.2)
-history = model.fit(np.array(x_train), np.array(y_train), batch_size=128, nb_epoch=1, validation_split=0.15)
+history = model.fit(np.array(x_train), y_one_hot, batch_size=128, nb_epoch=10, validation_split=0.15)
 
 test_score = model.evaluate(x_test, y_test)
 print(test_score)
