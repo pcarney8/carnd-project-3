@@ -55,11 +55,10 @@ def gen(images, labels, batch_size):
 		if start >= n:
 			start = 0
 			end = batch_size
-		print(start, end)
 		yield (x_batch, y_batch)
 
 # commonai model
-ch, row, col = 3, 16, 32  # camera format
+ch, row, col = 16, 32, 3  # camera format
 model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1.,
 		input_shape=(ch, row, col),
@@ -79,7 +78,7 @@ model.add(Dense(1))
 
 model.compile(optimizer="adam", loss="mse")
 batch_size = 128
-epochs = 5
+epochs = 200
 model.fit_generator(
 	gen(x_train, y_train, batch_size), 
 	samples_per_epoch = len(x_train), 
@@ -88,7 +87,8 @@ model.fit_generator(
 	nb_val_samples = len(x_validate)
 )
 
-test_score = model.evaluate(x_test, y_test)
+test_score = model.evaluate(np.array(x_test), np.array(y_test))
+print("\n")
 print(test_score)
 print(model.metrics_names)
 
