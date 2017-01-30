@@ -23,14 +23,21 @@ x_train = list()
 
 for img in X_train:
 	read_image = cv2.imread(img)
-	resized_image = cv2.resize(read_image, (32, 16))
+	crop_img = read_image[60:160, 0:320]
+	new_image = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
+	resized_image = cv2.resize(crop_img, (32, 10))
+#	flipped_image = resized_image.copy()
+#	flipped_image = cv2.flip(resized_image,1)
 	x_train.append(resized_image)
+#	x_train.append(flipped_image)
 
 y_train = list()
 
 for y in Y_train:
 	new_y = float(y)
+#	flipped_y = -1. * new_y
 	y_train.append(new_y)
+#	y_train.append(flipped_y)
 
 # shuffle the data
 x_train, y_train = shuffle(x_train, y_train)
@@ -57,28 +64,26 @@ def gen(images, labels, batch_size):
 			end = batch_size
 		yield (x_batch, y_batch)
 
-# commonai model
-ch, row, col = 16, 32, 3  # camera format
+# model (based off of comma.ai's, altered a bit to remove ELU and add relu's)
+ch, row, col = 10, 32, 3  # camera format
 model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1.,
 		input_shape=(ch, row, col),
 		output_shape=(ch, row, col)))
 model.add(Convolution2D(16, 8, 8, subsample=(4, 4), border_mode="same"))
-model.add(ELU())
 model.add(Convolution2D(32, 5, 5, subsample=(2, 2), border_mode="same"))
-model.add(ELU())
 model.add(Convolution2D(64, 5, 5, subsample=(2, 2), border_mode="same"))
 model.add(Flatten())
 model.add(Dropout(.2))
-model.add(ELU())
+model.add(Activation("relu"))
 model.add(Dense(512))
 model.add(Dropout(.5))
-model.add(ELU())
+model.add(Activation("relu"))
 model.add(Dense(1))
 
-model.compile(optimizer="adam", loss="mse")
+model.compile(optimizer="adam", loss="mse",  metrics=['accuracy'])
 batch_size = 128
-epochs = 200
+epochs = 25
 model.fit_generator(
 	gen(x_train, y_train, batch_size), 
 	samples_per_epoch = len(x_train), 
