@@ -19,7 +19,7 @@ The tricky part about having a ton of data was that it knows the course mainly g
 
 I had a little bit of trouble with the area right before the bridge because it had black barriers, where everything else has brighter, almost white barriers. Once the car was on the bridge it would easily go straight, probably because the sides were so clear and easy to distinguish.
 
-# Learnings
+## Learnings
 Region Masking! Always use it when you can. There's so much irrelevant information at the top of the picture.
 
 Parsing false positive might be relevant next time. I know with recording sometimes it's hard to time the samples correctly. I also should have probably used the other cameras, I can imagine they help a lot when the network is trying to recognize the boundaries that exist and what to stay away from.
