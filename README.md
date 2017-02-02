@@ -31,11 +31,11 @@ The tricky part about having a ton of data was that it knows the course mainly g
 
 As I kept going through the training process I would occasionally save off my "gold standard" model becuase it would get the furthest through the course. Ultimately I think it would have been a lot shorter if I had put the region masking on before hand. It's clear to see why my CNN would have trouble with this: 
 Original photo I was training with: 
-![alt text][center_2017_01_29_20_00_19_908.jpg "uncropped"]
+![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/center_2017_01_29_20_00_19_908.jpg "uncropped"]
 versus taking off the top 60 pixels:
-![alt text][cropped.jpg "cropped 1"]
+![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/cropped2.jpg "cropped 1"]
 versus taking off the top 70 pixels:
-![alt text][cropped2.jpg "cropped 2"]
+![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/cropped.jpg "cropped 2"]
 
 If I would have gone further and blacked out the areas that were still along the top upper right and upper left edges, I'm sure it would have been even better.
 
