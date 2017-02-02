@@ -17,7 +17,8 @@ I used an Adam optimizer so I wouldn't have fool around with the learning rate a
 I also found that 5 epochs was more than enough, my validation loss hovered around 0.017 and never got much lower no matter how many epochs.
 
 My architecture: 
-![alt text][model.png "my architecture"]
+![My architecture]
+(https://github.com/pcarney8/carnd-project-3/blob/master/model.png)
 
 ## Solution Design
 I originally started by reducing the size of the image to 32x16 so my laptop could handle that kind of workload. I used a generator, but I didn't load from disk in the generator, it 
@@ -31,11 +32,14 @@ The tricky part about having a ton of data was that it knows the course mainly g
 
 As I kept going through the training process I would occasionally save off my "gold standard" model becuase it would get the furthest through the course. Ultimately I think it would have been a lot shorter if I had put the region masking on before hand. It's clear to see why my CNN would have trouble with this: 
 Original photo I was training with: 
-![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/center_2017_01_29_20_00_19_908.jpg "uncropped"]
+![uncropped]
+(https://github.com/pcarney8/carnd-project-3/blob/master/center_2017_01_29_20_00_19_908.jpg)
 versus taking off the top 60 pixels:
-![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/cropped2.jpg "cropped 1"]
+![cropped 1]
+(https://github.com/pcarney8/carnd-project-3/blob/master/cropped2.jpg)
 versus taking off the top 70 pixels:
-![alt text][https://github.com/pcarney8/carnd-project-3/blob/master/cropped.jpg "cropped 2"]
+![cropped 2]
+(https://github.com/pcarney8/carnd-project-3/blob/master/cropped.jpg)
 
 If I would have gone further and blacked out the areas that were still along the top upper right and upper left edges, I'm sure it would have been even better.
 
