@@ -82,6 +82,10 @@ model.add(Dropout(.5))
 model.add(Activation("relu"))
 model.add(Dense(1))
 
+#print out model
+from keras.utils.visualize_util import plot
+plot(model, to_file='model.png')
+
 # train model
 model.compile(optimizer="adam", loss="mse")
 batch_size = 128
